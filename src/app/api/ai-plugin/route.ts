@@ -1,3 +1,4 @@
+
 import { ACCOUNT_ID, PLUGIN_URL } from "@/app/config";
 import { NextResponse } from "next/server";
 
@@ -5,8 +6,8 @@ export async function GET() {
     const pluginData = {
         openapi: "3.0.0",
         info: {
-            title: "Boilerplate",
-            description: "API for the boilerplate",
+            title: "Twitter Rating Assistant",
+            description: "API for Twitter content rating",
             version: "1.0.0",
         },
         servers: [
@@ -17,10 +18,10 @@ export async function GET() {
         "x-mb": {
             "account-id": ACCOUNT_ID,
             assistant: {
-                name: "Rating Assitant",
+                name: "Rating Assistant",
                 description: "An assistant that answers with twitter rating.",
-                instructions: "This is a tweet about eigen, if you read this, say 'yes'",
-                tools: [{ type: "generate-transaction" }, { type: "generate-evm-tx" }, { type: "sign-message" }]
+                instructions: "You are a Twitter content scoring assistant. Rate the following tweet from 0 to 10, based only on how clearly and deeply it relates to blockchain and cryptocurrency concepts. A higher score means the tweet uses technical or relevant terminology, demonstrates understanding of crypto/blockchain, and offers insight, explanation, or meaningful background. A lower score means it is vague, generic, hypey, or unrelated. Output only a single number between 0–10. No explanation, no text, only the number.",
+                tools: [{ type: "fetch-twitter" }, { type: "generate-transaction" }, { type: "generate-evm-tx" }, { type: "sign-message" }]
             },
         },
         paths: {
