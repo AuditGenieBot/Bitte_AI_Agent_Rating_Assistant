@@ -1,4 +1,3 @@
-
 import { ACCOUNT_ID, PLUGIN_URL } from "@/app/config";
 import { NextResponse } from "next/server";
 
@@ -8,32 +7,28 @@ export async function GET() {
         info: {
             title: "Twitter Rating Assistant",
             description: "API for Twitter content rating",
-            version: "1.0.0",
+            version: "1.0.0"
         },
         servers: [
             {
-                url: PLUGIN_URL,
+                url: "https://agent-rating.vercel.app",
             },
         ],
         "x-mb": {
-            "account-id": ACCOUNT_ID,
+            "account-id": "yanghang.near",
             "email": "yang.hang0918@hotmail.com",
             "assistant": {
                 "name": "Rating Assistant",
                 "description": "An assistant that answers with twitter rating.",
-                "instructions": "You are a Twitter content scoring assistant. Rate the following tweet from 0 to 10, based only on how clearly and deeply it relates to blockchain and cryptocurrency concepts. A higher score means the tweet uses technical or relevant terminology, demonstrates understanding of crypto/blockchain, and offers insight, explanation, or meaningful background. A lower score means it is vague, generic, hypey, or unrelated. Output only a single number between 0–10. No explanation, no text, only the number.",
-                "tools": [{ "type": "fetch-twitter" }, { "type":"generate-transaction" }, { "type": "generate-evm-tx" }, { "type": "sign-message" }]
+                "instructions": "You are a Twitter content scoring assistant. When a URL is given, use the fetch-twitter tool to retrieve the content. Rate the following tweet from 0 to 10, based only on how clearly and deeply it relates to blockchain and cryptocurrency concepts. A higher score means the tweet uses technical or relevant terminology, demonstrates understanding of blockchain mechanics, or discusses specific crypto projects. Your response must be only a number between 0 and 10, with no explanation or text.",
+                "tools": [{ "type": "fetch-twitter" }, { "type": "generate-transaction" }, { "type": "generate-evm-tx" }, { "type": "sign-message" }]
             },
-            "image": "https://agent-image.example",
-            "categories": ["tags","for","your","agent"],
-            "chainIds": [1,8453],
-            "version": "0.1.27"
         },
         paths: {
             "/api/tools/fetch-twitter": {
                 get: {
-                    summary: "fetch from twitter",
-                    description: "Fetches from twitter and returns content",
+                    summary: "Fetch Twitter content",
+                    description: "Fetches tweet content from a Twitter URL",
                     operationId: "fetch-twitter",
                     parameters: [
                         {
@@ -43,8 +38,8 @@ export async function GET() {
                             schema: {
                                 type: "string"
                             },
-                            description: "Twitter URL to fetch from."
-                        },
+                            description: "Twitter URL to fetch content from"
+                        }
                     ],
                     responses: {
                         "200": {
@@ -56,8 +51,39 @@ export async function GET() {
                                         properties: {
                                             content: {
                                                 type: "string",
-                                                description: "Content fetched from Twitter URL."
-                                            },
+                                                description: "Content fetched from Twitter URL"
+                                            }
+                                        },
+                                        required: ["content"]
+                                    }
+                                }
+                            }
+                        },
+                        "400": {
+                            description: "Bad request - Invalid Twitter URL",
+                            content: {
+                                "application/json": {
+                                    schema: {
+                                        type: "object",
+                                        properties: {
+                                            error: {
+                                                type: "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "500": {
+                            description: "Internal server error",
+                            content: {
+                                "application/json": {
+                                    schema: {
+                                        type: "object",
+                                        properties: {
+                                            error: {
+                                                type: "string"
+                                            }
                                         }
                                     }
                                 }
@@ -65,8 +91,8 @@ export async function GET() {
                         }
                     }
                 }
-            },
-        },
+            }
+        }
     };
 
     return NextResponse.json(pluginData);
