@@ -12,11 +12,11 @@ export async function GET() {
         },
         servers: [
             {
-                url: "https://agent-rating.vercel.app",
+                url: PLUGIN_URL,
             },
         ],
         "x-mb": {
-            "account-id": "yanghang0918.near",
+            "account-id": ACCOUNT_ID,
             "email": "yang.hang0918@hotmail.com",
             "assistant": {
                 "name": "Rating Assistant",
